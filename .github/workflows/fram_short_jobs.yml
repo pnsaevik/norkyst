@@ -35,6 +35,15 @@ jobs:
           SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
           SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
 
-      # Check status of job scripts using ssh and grep
+      - name: Print current commit hash
+        run: echo "${GITHUB_SHA}"
+
+      - name: Get fram build log
+        run: ssh staging "date" > build_log.csv
+
+      - name: Print build log
+        run: cat build_log.csv
+
+      # Check status of job scripts using grep
       - name: Check status of short jobs on Fram
-        run: ssh staging "date" | grep "^${GITHUB_SHA}\s*short\s*SUCCESS"
+        run: cat build_log.csv | grep "^${GITHUB_SHA}\s*short\s*SUCCESS"
