@@ -1,0 +1,23 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Check short jobs on Fram
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  fram-short-jobs:
+    runs-on: ubuntu-latest
+    steps:
+      # Check status of job scripts using ssh and grep
+      - name: Check status of short jobs on Fram
+        run: echo "00bbde594ba56e5ede5bd994178cbec9b00a59b1   short       STARTED     2022-07-01T09:54:23.000000" | grep "^00bbde594ba56e5ede5bd994178cbec9b00a59b1\s*short\s*STARTED"
