@@ -20,4 +20,4 @@ jobs:
     steps:
       # Check status of job scripts using ssh and grep
       - name: Check status of short jobs on Fram
-        run: echo "00bbde594ba56e5ede5bd994178cbec9b00a59b1   short       STARTED     2022-07-01T09:54:23.000000" | grep "^00bbde594ba56e5ede5bd994178cbec9b00a59b1\s*short\s*STARTED"
+        run: echo "${GITHUB_SHA}   short       SUCCESS     2022-07-01T09:54:23.000000" | grep "^${GITHUB_SHA}\s*short\s*SUCCESS"
