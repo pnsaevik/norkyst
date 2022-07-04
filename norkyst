@@ -2,6 +2,11 @@
 
 set -e  # Exit script if any command fails
 
+# Define dependencies
+ROMS_SOURCE="https://github.com/kshedstrom/roms"
+ROMS_VERSION="6426b5c3f63b493c808517c9edd1c8b7b275dfe0"
+
+
 GIT_SOURCE="$(dirname "$0")"
 SESSION_KEY="$(date --utc +%Y-%m-%d_%H.%M.%S)"
 SESSION_WORKSPACE="$USERWORK/norkyst_runs/$SESSION_KEY"
@@ -16,13 +21,26 @@ echo "Current commit: $(git rev-parse HEAD)"
 echo "Workspace: $SESSION_WORKSPACE"
 
 echo ""
-echo "Load Sigma2 modules"
+echo "--- Load Sigma2 modules ---"
 module --quiet purge
 module load netcdf4-python/1.5.7-intel-2021b
 module list
 
+
 echo ""
-echo "Update cached python environment"
+echo "--- Update cached ROMS source code ---"
+ROMS_SUBDIR="cache/roms"
+if [ ! -d "$GIT_SOURCE/$ROMS_SUBDIR" ]
+then
+    git clone "$ROMS_SOURCE" "$GIT_SOURCE/$ROMS_SUBDIR"
+else
+    git --git-dir="$GIT_SOURCE/$ROMS_SUBDIR/.git" fetch
+fi
+git --git-dir="$GIT_SOURCE/$ROMS_SUBDIR/.git/" --work-tree="$GIT_SOURCE/$ROMS_SUBDIR/" checkout "$ROMS_VERSION"
+
+
+echo ""
+echo "--- Update cached python environment ---"
 GIT_SOURCE="$(dirname "$0")"
 CACHE_DIR="$GIT_SOURCE/cache"
 VENV_SUBDIR="cache/venv_norkyst"
@@ -34,13 +52,14 @@ deactivate
 
 
 echo ""
-echo "Copy source code to workspace directory"
-rsync -rltp --exclude=".git" "$GIT_SOURCE" "$SESSION_WORKSPACE"
+echo "--- Copy files to workspace directory ---"
+rsync -rltp --exclude="*/.git/" "$GIT_SOURCE" "$SESSION_WORKSPACE"
+echo "Done"
 source "$SESSION_WORKSPACE/$VENV_SUBDIR/bin/activate"
 
 
 echo ""
-echo "Install norkyst python package"
+echo "--- Install norkyst python package ---"
 python -m pip install --no-deps --editable "$SESSION_WORKSPACE"
 
 
