@@ -8,6 +8,7 @@ SESSION_WORKSPACE="$USERWORK/norkyst_runs/$SESSION_KEY"
 LOGFILE="$SESSION_WORKSPACE/norkyst.log"
 mkdir -p "$SESSION_WORKSPACE"
 
+{
 echo ""
 echo "Starting NorKyst, $(date)"
 echo "Current directory: $(pwd)"
@@ -45,3 +46,4 @@ python -m pip install --no-deps --editable "$SESSION_WORKSPACE"
 
 echo ""
 echo "NorKyst is finished, $(date)"
+} | tee "$LOGFILE"
