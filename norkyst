@@ -2,7 +2,6 @@
 
 
 echo "Starting NorKyst, $(date)"
-SESSION_KEY="$(date --utc +%Y-%m-%d_%H%M%S)"
 
 
 module --quiet purge
@@ -18,6 +17,11 @@ python -m venv --upgrade "$VENV_DIR"
 source "$VENV_DIR/bin/activate"
 
 
+echo "Update python packages"
+python -m pip install --editable "$GIT_SOURCE"
+
+
+SESSION_KEY="$(date --utc +%Y-%m-%d_%H%M%S)"
 SESSION_WORKSPACE="$USERWORK/norkyst_runs/$SESSION_KEY"
 echo "Create workspace in $SESSION_WORKSPACE"
 echo "Copy from $GIT_SOURCE"
