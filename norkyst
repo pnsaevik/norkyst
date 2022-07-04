@@ -1,9 +1,25 @@
 #!/usr/bin/env bash
 
-echo "Starting NorKyst, $(date)"
 
-module purge
+echo "Starting NorKyst, $(date)"
+SESSION_KEY="$(date --utc +%Y-%m-%d_%H%M%S)"
+
+
+module --quiet purge
 module load netcdf4-python/1.5.7-intel-2021b
 module list
+
+
+echo "Activate cached python environment"
+GIT_SOURCE="$(dirname "$0")"
+CACHE_DIR="$GIT_SOURCE/cache"
+VENV_DIR="$GIT_SOURCE/cache/venv_norkyst"
+python -m venv --upgrade "$VENV_DIR"
+source "$VENV_DIR/bin/activate"
+
+
+SESSION_WORKSPACE="$USERWORK/norkyst_runs/$SESSION_KEY"
+echo "Create workspace in $SESSION_WORKSPACE"
+echo "Copy from $GIT_SOURCE"
 
 echo "NorKyst is finished, $(date)"
