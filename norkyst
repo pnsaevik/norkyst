@@ -53,7 +53,7 @@ deactivate
 
 echo ""
 echo "--- Copy files to workspace directory ---"
-rsync -rltp --exclude="*/.git/" "$GIT_SOURCE" "$SESSION_WORKSPACE"
+rsync -rltp --exclude="*/.git/" --exclude=".git/" "$GIT_SOURCE" "$SESSION_WORKSPACE"
 echo "Done"
 source "$SESSION_WORKSPACE/$VENV_SUBDIR/bin/activate"
 
